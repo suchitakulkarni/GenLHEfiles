@@ -33,35 +33,41 @@ if __name__ == "__main__":
 
     # location of the undecayed, unprocessed files. 
     # The files should not be zipped. 
-    inputdir = "Undecayed_processed/input/"
+    #inputdir = "/afs/cern.ch/user/s/sukulkar/public/decay_lhe/GenLHEfiles/DecayStep/lhe_samples/"
+    #inputdir = "/afs/cern.ch/user/a/acanepa/public/"
+    inputdir = "/afs/cern.ch/user/s/sukulkar/work/sukulkar/private/MG_sample_generation_C1N2/C1N2_400_375_lhe_undecayed/"
 
     # Which sparticle you want to decay. 
     # In my setup this is part of the name of the undecayed file; so it might not be necessary for you
-    particle = "squark" # "stop", "gluino", "sbottom"
+    particle = "C1N2" #"squark" # "stop", "gluino", "sbottom"
     
     # Name of the model you want to generate. This will go in the name of the output file
-    model = "T2qq" # "T2tt", "T1tttt", ...
+    model = "TChiWZoff" # "TChiWZ" #"T2qq" # "T2tt", "T1tttt", ...
 
     # Make a list of all the undecayed files you want to process
     # This will need customizing depending on your needs
     # Here I want to decay a few files for a few mass points
     fnames_to_process = []
-    basename = particle+"_MASS_xqcut30_NR.lhe" # template name of the undecayed file
-    masses = [1200] # all masses you want to process
-    nrs = [1] # in case you generated multiple files for the same mass and gave them a number
+    #basename = particle+"_MASS_xqcut30_NR.lhe" # template name of the undecayed file
+    basename = "cmsgrid_final.lhe"
+    masses = [400] # all masses you want to process
+    nrs = range(0,101) # in case you generated multiple files for the same mass and gave them a number
     for mass in masses:
         for nr in nrs:
+            basename = "cmsgrid_final.lhe"
             # build up the exact name of the undecayed file(s) you want to process
+            basename = basename.replace(".lhe","_%i.lhe" %(nr))
+  	    print basename
             name = basename.replace("MASS",str(mass)).replace("NR",str(nr))
             fnames_to_process.append(name)
-
+    print fnames_to_process
     # You will also need to specify the masses for the sparticles in the decay chain
     # Depending on the length of the desired decay chain, you will need to add more lists here
-    lsp_masses = [100] # all LSP masses needed for the decay
+    lsp_masses = [375] # all LSP masses needed for the decay
 
     # location of the output directory
-    outputdir = "Undecayed_processed/"
-
+    #outputdir = "Undecayed_processed/"
+    outputdir = "/afs/cern.ch/user/s/sukulkar/work/sukulkar/private/C1N2_undecayed_processed/"
     # Build up list with all the filenames for the output files
     fnames_output = []
     basename2 = "MODEL_"+particle+"_MASS_LSP_mass_xqcut30_NR.lhe"
@@ -100,10 +106,40 @@ if __name__ == "__main__":
         "DECAY  2000004  0.1 \n   1.0  2  1000022 4      # cr -> ~chi_10 c \n" + \
         LSP_stable
 
+    TChiWZ_decay = "DECAY   1000023     0.10000000E+00   # neutralino2 decays \n" +\
+	"#           BR         NDA      ID1       ID2       ID3 \n"+\
+        "    1.00000000E+00    2    23    1000022 \n" + \
+	"DECAY   1000024     0.10000000E+00   # chargino1+ decays \n" +\
+	"#           BR         NDA      ID1       ID2       ID3 \n" +\
+	"     1.00000000E+00    2    24    1000022 \n" + LSP_stable
+
+    TChiWZoff_decay =  "#         PDG            Width \n" +\
+        "DECAY   1000024     1.00000000E+00   # chargino1+ decays \n" +\
+        "#           BR         NDA      ID1       ID2       ID3 \n" +\
+        "3.35000000E-01    3     1000022         2        -1   # BR(~chi_1+ -> ~chi_10 u    db) \n" +\
+        "3.35000000E-01    3     1000022         4        -3   # BR(~chi_1+ -> ~chi_10 c    sb) \n" +\
+        "1.10000000E-01    3     1000022       -11        12   # BR(~chi_1+ -> ~chi_10 e+   nu_e) \n" +\
+        "1.10000000E-01    3     1000022       -13        14   # BR(~chi_1+ -> ~chi_10 mu+  nu_mu) \n" +\
+        " 1.10000000E-01    3     1000022       -15        16   # BR(~chi_1+ -> ~chi_10 tau+ nu_tau) \n" +\
+        " # \n" +\
+        "#         PDG            Width \n" +\
+        "DECAY   1000023     1.00000000E+00   # neutralino2 decays \n" +\
+        "#           BR         NDA      ID1       ID2       ID3 \n" +\
+        "1.16000000E-01    3     1000022        -2         2   # BR(~chi_20 -> ~chi_10 ub      u) \n" +\
+        "1.56000000E-01    3     1000022        -1         1   # BR(~chi_20 -> ~chi_10 db      d) \n" +\
+        "1.16000000E-01    3     1000022        -4         4   # BR(~chi_20 -> ~chi_10 cb      c) \n" +\
+        "1.56000000E-01    3     1000022        -3         3   # BR(~chi_20 -> ~chi_10 sb      s) \n" +\
+        "1.56000000E-01    3     1000022        -5         5   # BR(~chi_20 -> ~chi_10 bb      b) \n" +\
+        "3.36300000E-02    3     1000022       -11        11   # BR(~chi_20 -> ~chi_10 e+      e-) \n" +\
+        "3.36600000E-02    3     1000022       -13        13   # BR(~chi_20 -> ~chi_10 mu+     mu-) \n" +\
+        "3.37000000E-02    3     1000022       -15        15   # BR(~chi_20 -> ~chi_10 tau+    tau-) \n" +\
+        "6.66000000E-02    3     1000022       -12        12   # BR(~chi_20 -> ~chi_10 nu_eb   nu_e) \n" +\
+        "6.66000000E-02    3     1000022       -14        14   # BR(~chi_20 -> ~chi_10 nu_mub  nu_mu) \n" +\
+        "6.66000000E-02    3     1000022       -16        16   # BR(~chi_20 -> ~chi_10 nu_taub nu_tau) \n" + LSP_stable
     # specify the decay you want to use for each file you want to process
     list_decay = []
     for i in range(len(fnames_output)):
-        list_decay.append(T2qq_decay)
+        list_decay.append(TChiWZoff_decay)
 
     # Do the actual processing
     # process_lhe(...) takes four inputs:
