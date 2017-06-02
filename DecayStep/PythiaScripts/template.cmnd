@@ -2,3 +2,8 @@ Main:numberOfEvents = NEVENTS         ! number of events to generate
 Beams:frameType = 4                ! use LHEF input
 Beams:LHEF = INFILE
 PartonLevel:all = off
+
+! Testing minimum allowed mass for offshell W and Z decays
+
+23:mMin = 0.1
+24:mMin = 0.1
