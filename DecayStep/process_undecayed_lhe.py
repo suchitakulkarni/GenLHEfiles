@@ -1,6 +1,7 @@
 # Before running the decay step, we need to make sure the SLHA is properly included in the header of the LHE files
 
 import sys
+import os
 
 def process_lhe(infilename, outfilename, masses_to_replace, decay_info):
     infile = open(infilename)
@@ -35,8 +36,9 @@ if __name__ == "__main__":
     # The files should not be zipped. 
     #inputdir = "/afs/cern.ch/user/s/sukulkar/public/decay_lhe/GenLHEfiles/DecayStep/lhe_samples/"
     #inputdir = "/afs/cern.ch/user/a/acanepa/public/"
-    inputdir = "/afs/cern.ch/user/s/sukulkar/work/sukulkar/private/MG_sample_generation_C1N2/C1N2_400_375_lhe_undecayed/"
-
+    #inputdir = "/afs/cern.ch/user/s/sukulkar/work/sukulkar/private/MG_sample_generation_C1N2/C1N2_400_375_lhe_undecayed/"
+    inputdir ="/afs/cern.ch/user/s/sukulkar/work/sukulkar/private/MG_sample_generation_C1N2/C1N2_300_295.5_lhe_undecayed/"
+    if inputdir[-1]!="/":inputdir = inputdir +"/"
     # Which sparticle you want to decay. 
     # In my setup this is part of the name of the undecayed file; so it might not be necessary for you
     particle = "C1N2" #"squark" # "stop", "gluino", "sbottom"
@@ -50,8 +52,8 @@ if __name__ == "__main__":
     fnames_to_process = []
     #basename = particle+"_MASS_xqcut30_NR.lhe" # template name of the undecayed file
     basename = "cmsgrid_final.lhe"
-    masses = [400] # all masses you want to process
-    nrs = range(0,101) # in case you generated multiple files for the same mass and gave them a number
+    masses = [300] # all masses you want to process
+    nrs = range(0,100) # in case you generated multiple files for the same mass and gave them a number
     for mass in masses:
         for nr in nrs:
             basename = "cmsgrid_final.lhe"
@@ -63,11 +65,12 @@ if __name__ == "__main__":
     print fnames_to_process
     # You will also need to specify the masses for the sparticles in the decay chain
     # Depending on the length of the desired decay chain, you will need to add more lists here
-    lsp_masses = [375] # all LSP masses needed for the decay
+    lsp_masses = [250] # all LSP masses needed for the decay
 
     # location of the output directory
     #outputdir = "Undecayed_processed/"
-    outputdir = "/afs/cern.ch/user/s/sukulkar/work/sukulkar/private/C1N2_undecayed_processed/"
+    outputdir = "/afs/cern.ch/user/s/sukulkar/work/sukulkar/private/C1N2_undecayed_processed_300_250/"
+    if not os.path.exists(outputdir): os.mkdir(outputdir)
     # Build up list with all the filenames for the output files
     fnames_output = []
     basename2 = "MODEL_"+particle+"_MASS_LSP_mass_xqcut30_NR.lhe"

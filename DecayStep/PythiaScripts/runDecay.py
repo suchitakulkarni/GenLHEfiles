@@ -1,9 +1,9 @@
 # Run the decay for a list of files
-import os, glob, sys
+import os, glob, sys, commands
 from optparse import OptionParser
 
 def doDecay(cfgname, outfilename):
-    basename = cfgname.split("/")[-1].split(".")[0]
+    basename = cfgname.split("/")[-1].replace(".lhe","")
     command = "./main20.exe %s %s > logs/%s.log" % (cfgname, outfilename, basename)
     print command
     os.system(command)
@@ -32,6 +32,7 @@ if __name__ == "__main__":
 
     (options, args) = parser.parse_args()
     
+    print commands.getoutput("make")
     # select all the files you want to decay
     # These files need to have the proper SLHA block in the header 
     # It is also assumed that the string "undecayed" is part of the name
@@ -47,7 +48,7 @@ if __name__ == "__main__":
 
     for f in files_to_run: 
         print "Will run decay for file", f
-        basename = f.split("/")[-1].split(".")[0]
+        basename = f.split("/")[-1].replace(".lhe","")
 
         print "\tMaking config file"
         cfgname = "cfgs/decay_"+basename+".cmnd"
